@@ -1,0 +1,23 @@
+{
+  "name": "aws_gw_lambda_simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jason Litowitz",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "0.0.32",
+    "@types/cors": "^2.8.3",
+    "@types/express": "^4.11.1",
+    "@types/node": "^9.4.6",
+    "typescript": "^2.7.2"
+  }
+}
