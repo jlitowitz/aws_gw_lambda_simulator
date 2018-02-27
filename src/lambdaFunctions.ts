@@ -16,6 +16,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 import * as express from 'express';
 import * as url from 'url';
+import { HTTP_VERB } from './types/lambdaRoute';
 
 // A wrapper function to handle the basic input/output for a lambda
 export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.Request, res: express.Response) {

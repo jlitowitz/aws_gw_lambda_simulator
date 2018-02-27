@@ -18,6 +18,8 @@ import * as express from 'express';
 import * as cors from 'cors';
 
 import * as lambdaFunctions from './lambdaFunctions';
+import { HTTP_VERB, lambdaRoute } from './types/lambdaRoute';
+export * from './types/lambdaRoute';
 
 /**
  * The definition of routes to host.

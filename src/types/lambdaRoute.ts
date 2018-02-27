@@ -13,14 +13,18 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-const enum HTTP_VERB { GET="GET", POST="POST" };
+// const enum HTTP_VERB { GET="GET", POST="POST" };
+export class HTTP_VERB {
+    public static GET : string = "GET";
+    public static POST : string = "POST";
+}
 
 /**
  * The definition of a route to host.
  * 
  * @interface lambdaRoute
  */
-interface lambdaRoute {
+export interface lambdaRoute {
     verb : HTTP_VERB,
     filepath : string,
     route : string

@@ -30,7 +30,7 @@ server.listen(3000, () => {
 
 Prefer TypeScript?  So do we!  Here's the same example in TypeScript:
 ```ts
-import { Server, RouteConfig } from 'aws_gw_lambda_simulator';
+import { Server, HTTP_VERB, lambdaRoute } from 'aws_gw_lambda_simulator';
 
 let server = new Server();
 let routes: Array<lambdaRoute> = [
