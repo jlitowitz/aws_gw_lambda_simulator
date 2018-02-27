@@ -59,7 +59,7 @@ export class Server {
      * @param {*} corsOptions Optional CORS configuration.
      * @memberof Server
      */
-    config(routes: Array<lambdaRoute>, corsOptions: any): void {
+    config(routes: Array<lambdaRoute>, corsOptions?: any): void {
         this.router = express.Router();
 
         if (corsOptions) {
