@@ -58,6 +58,15 @@ let cors = {
 server.config(routes, cors);
 ```
 
+## Debugging Workflow
+Obviously, there are countless ways of accomplishing the same task when it comes to coding.  What we tend to do is:
+
+* Create a new folder and run `npm init`
+* Load that folder up in [Visual Studio Code](https://code.visualstudio.com)
+* Create the startup scaffold, based on the examples above
+* Create a distict folder on the filesystem somewhere for each Lambda and add each folder to the Workspace -- this allows us to maintain each Lambda in a separate Git repo.
+* Set breakpoints and debug as normal.
+
 ## Details
 **aws_gw_lambda_simulator** uses [express](https://www.npmjs.com/package/express) to spin up a web server.  You pass in an array of routes to expose, as well as optional CORS configuration as described above.  It passes in mock objects that stand in for the `event`, `context`, and `callback` values.  These are not 100% accurate representations of the objects you'll be provided in the true AWS Lambda environment.  Rather, they contain a subset of those fields that have thus far been necessary for our development.
 
