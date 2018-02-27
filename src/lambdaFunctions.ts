@@ -30,7 +30,7 @@ export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.R
     })
 }
 
-class mockContext implements AWSLambda.Context {
+export class mockContext implements AWSLambda.Context {
     callbackWaitsForEmptyEventLoop: boolean;
     functionName: string;
     functionVersion: string;
@@ -57,7 +57,7 @@ class mockContext implements AWSLambda.Context {
     }
 }
 
-class mockEvent implements AWSLambda.APIGatewayEvent {
+export class mockEvent implements AWSLambda.APIGatewayEvent {
     body: string;
     headers: { [name: string]: string; };
     httpMethod: string;
