@@ -64,7 +64,7 @@ Obviously, there are countless ways of accomplishing the same task when it comes
 * Create a new folder and run `npm init`
 * Load that folder up in [Visual Studio Code](https://code.visualstudio.com)
 * Create the startup scaffold, based on the examples above
-* Create a distict folder on the filesystem somewhere for each Lambda and add each folder to the Workspace -- this allows us to maintain each Lambda in a separate Git repo.
+* Create a distinct folder on the filesystem somewhere for each Lambda and add each folder to the Workspace -- this allows us to maintain each Lambda in a separate Git repo.
 * Set breakpoints and debug as normal.
 
 ## Details
