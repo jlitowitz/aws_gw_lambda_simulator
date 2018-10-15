@@ -1,5 +1,5 @@
 {
-  "name": "aws_gw_lambda_simulator",
+  "name": "@tripletaketechnologies.com/aws_gw_lambda_simulator",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
