@@ -16,6 +16,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 import * as express from 'express';
 import * as cors from 'cors';
+import * as bodyParser from 'body-parser';
 
 import * as lambdaFunctions from './lambdaFunctions';
 import { HTTP_VERB, lambdaRoute } from './types/lambdaRoute';
@@ -52,6 +53,7 @@ export class Server {
     constructor() {
         //create expressjs application
         this.app = express();
+        this.app.use(bodyParser.json());
     }
 
     /**
