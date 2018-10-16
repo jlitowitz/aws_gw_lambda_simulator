@@ -27,7 +27,7 @@ export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.R
             return res.status(502).json({ err });
         }
 
-        return res.status(result.statusCode).json(JSON.parse(result.body));
+        return res.status(result.statusCode).json(result.body);
     })
 }
 
