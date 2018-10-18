@@ -7,7 +7,7 @@
   "repository": "Triple-Take-Technologies/aws_gw_lambda_simulator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "tsc"
+    "prepublishOnly": "tsc"
   },
   "keywords": [],
   "author": "Jason Litowitz",
