@@ -7,7 +7,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "baseUrl": ".",
-        "watch": true,
+        "watch": false,
         "declaration": true,
         "paths": {
             "*": [

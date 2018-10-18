@@ -4,8 +4,10 @@
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": "Triple-Take-Technologies/aws_gw_lambda_simulator",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
   },
   "keywords": [],
   "author": "Jason Litowitz",
