@@ -58,6 +58,40 @@ let cors = {
 server.config(routes, cors);
 ```
 
+## URL Parameters
+URL Parameters are supported.  Simply include the name of the parameter in typical `express`-style notation, rather than the AWS-style bracked `{}` notation.  For example:
+
+```js
+let routes = [
+    { verb: "GET", filepath: __dirname + '/echo', route: '/echo/:id' }
+];
+```
+
+The value of `:id` will be supplied in `event.pathParameters.id`, just as they would in the proper AWS environment.  For example, if the the above route definition calls the `echo` sample lambda shown below, and a request comes in for `http://localhost:9999/echo/abc` (where your server is running on port 9999 on localhost), the result will be something like:
+
+```json
+{
+    "event": {
+        "resource": "/echo/:id",
+        "path": "/echo/abc",
+        "queryStringParameters": null,
+        "pathParameters": {
+            "id": "abc"
+        },
+        "httpMethod": "GET",
+        "headers": {
+            "cache-control": "no-cache",
+            "accept": "*/*",
+            "host": "localhost:9999",
+            "accept-encoding": "gzip, deflate",
+            "connection": "keep-alive"
+        },
+        "body": {}
+    },
+    "context": {}
+}
+```
+
 ## Debugging Workflow
 Obviously, there are countless ways of accomplishing the same task when it comes to coding.  What we tend to do is:
 
@@ -93,7 +127,7 @@ The `config` method requires an array of `lambdaRoutes`.  Each one of these must
 ## Limitations
 * Unlike the actual Lambda environment, containers are not used to execute individual executions.  In contrast, everything here runs on the same thread as is typical for a basic Express application.  This means if you wanted, you could do funky things that allow the different lambdas to interact with each other in ways that aren't possible in the actual environment.  If you wanted to do things like that, just go ahead and use Express directly, since it violates the whole point of developing lambdas!
 * For now, we only simulate the LAMBDA_PROXY integration method.  Long-term we will look into incorporating the [Velocity Template Language](http://velocity.apache.org/engine/devel/vtl-reference.html).  For now though, that's just a pipe dream.
-* The `context` object that is provided to a lambda is an empty object.  It does not include any of the `context` properties (ex: `context.memoryLimitInMB` or `context.invokedFunctionArn`) or methods (ex: `context.getRemainingTimeInMillis()`) that would be provided in the AWS environment.  If your lambda uses the older `context.succeed()`, `context.fail()` or `context.done()` methods to finish executing - yeah, they're not going to work.  Use `callback()`.
+* The `context` object that is provided to a lambda is a mock object.  It does not include proper values for any of the `context` properties (ex: `context.memoryLimitInMB` or `context.invokedFunctionArn`) or implementations for methods (ex: `context.getRemainingTimeInMillis()`) that would be provided in the AWS environment.  Any attempt to call such methods will throw not-implemented errors.  If your lambda uses the older `context.succeed()`, `context.fail()` or `context.done()` methods to finish executing - they're not going to work, either.  Use `callback()`.
 ___
 Disclaimer:  this project is not in any way associated with AWS or Amazon!
 
