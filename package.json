@@ -1,6 +1,6 @@
 {
   "name": "aws_gw_lambda_simulator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,7 +9,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "tsc"
   },
-  "keywords": ["aws", "lambda", "api gateway"],
+  "keywords": [
+    "aws",
+    "lambda",
+    "api gateway"
+  ],
   "author": "Jason Litowitz",
   "license": "MIT",
   "dependencies": {
