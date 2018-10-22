@@ -15,9 +15,17 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 // const enum HTTP_VERB { GET="GET", POST="POST" };
 export class HTTP_VERB {
+    // public static ALL : string = "ALL";
     public static GET : string = "GET";
     public static POST : string = "POST";
+    public static PUT : string = "PUT";
+    public static DELETE : string = "DELETE";
+    public static PATCH : string = "PATCH";
+    public static OPTIONS : string = "OPTIONS";
+    public static HEAD : string = "HEAD";
 }
+
+
 
 /**
  * The definition of a route to host.

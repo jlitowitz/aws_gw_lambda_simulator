@@ -120,7 +120,16 @@ typically doesn't do).
 
 The `config` method requires an array of `lambdaRoutes`.  Each one of these must contain exactly 3 properties:
 
-* `verb` - this is the HTTP verb to listen for.  Currently, only `GET` and `POST` are supported.  If using TypeScript, you can use the enum `HTTP_VERB` to access the possible values:  `HTTP_VERB.GET` or `HTTP_VERB.POST`.  Otherwise, use the values `"GET"` or `"POST"`.
+    public static GET : string = "GET";
+    public static POST : string = "POST";
+    public static PUT : string = "PUT";
+    public static DELETE : string = "DELETE";
+    public static PATCH : string = "PATCH";
+    public static OPTIONS : string = "OPTIONS";
+    public static HEAD : string = "HEAD";
+
+
+* `verb` - this is the HTTP verb to listen for.  Currently, `GET`, `POST`, `PUT`, `DELETE`, `PATCH`, `OPTIONS`, and `HEAD` are supported.  If using TypeScript, you can use the enum `HTTP_VERB` to access the possible values:  `HTTP_VERB.GET` or `HTTP_VERB.POST`.  Otherwise, use the name of the verb (ex: `"GET"` or `"POST"`).
 * `filepath` - the path to the entry point file for your Lambda.  Since this file gets loaded via `require`, you don't need to include the trailing '.js' if you don't want to.  You must specify the full path or use `__dirname` to ensure the correct path is used to locate the lambda entry point.  Otherwise, it will attempt to load the file using the node_modules subfolder as the starting point, and will lead you to unexpected results.
 * `route` - the URL path to expose the endpoint as.
 

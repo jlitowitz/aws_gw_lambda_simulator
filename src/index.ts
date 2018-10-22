@@ -73,13 +73,45 @@ export class Server {
         routes.forEach((route) => {
             let service = require(route.filepath);
 
-            if (route.verb === HTTP_VERB.POST) {
+            // TODO: Is there a way to genericize / simplify this if/else block?
+            /* if (route.verb === HTTP_VERB.ALL) {
+                this.router.all(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else */
+            if (route.verb === HTTP_VERB.GET) {
+                this.router.get(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else if (route.verb === HTTP_VERB.POST) {
                 this.router.post(route.route, (req, res) => {
                     return lambdaFunctions.Wrapper(service, route.verb, req, res);
                 })
             }
-            else if (route.verb === HTTP_VERB.GET) {
-                this.router.get(route.route, (req, res) => {
+            else if (route.verb === HTTP_VERB.PUT) {
+                this.router.put(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else if (route.verb === HTTP_VERB.DELETE) {
+                this.router.delete(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else if (route.verb === HTTP_VERB.PATCH) {
+                this.router.patch(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else if (route.verb === HTTP_VERB.OPTIONS) {
+                this.router.options(route.route, (req, res) => {
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                })
+            }
+            else if (route.verb === HTTP_VERB.HEAD) {
+                this.router.head(route.route, (req, res) => {
                     return lambdaFunctions.Wrapper(service, route.verb, req, res);
                 })
             }
