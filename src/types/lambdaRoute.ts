@@ -25,7 +25,9 @@ export class HTTP_VERB {
     public static HEAD : string = "HEAD";
 }
 
-
+export interface gwOptions {
+    x_api_key? : string
+}
 
 /**
  * The definition of a route to host.
@@ -35,5 +37,6 @@ export class HTTP_VERB {
 export interface lambdaRoute {
     verb : HTTP_VERB,
     filepath : string,
-    route : string
+    route : string,
+    options? : gwOptions
 }

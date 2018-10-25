@@ -82,37 +82,37 @@ export class Server {
             else */
             if (route.verb === HTTP_VERB.GET) {
                 this.router.get(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.POST) {
                 this.router.post(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.PUT) {
                 this.router.put(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.DELETE) {
                 this.router.delete(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.PATCH) {
                 this.router.patch(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.OPTIONS) {
                 this.router.options(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else if (route.verb === HTTP_VERB.HEAD) {
                 this.router.head(route.route, (req, res) => {
-                    return lambdaFunctions.Wrapper(service, route.verb, req, res);
+                    return lambdaFunctions.Wrapper(service, route.verb, req, res, route.options);
                 })
             }
             else {

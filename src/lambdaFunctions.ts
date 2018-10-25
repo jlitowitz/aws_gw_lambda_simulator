@@ -16,10 +16,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 import * as express from 'express';
 import * as url from 'url';
-import { HTTP_VERB } from './types/lambdaRoute';
+import { HTTP_VERB, gwOptions } from './types/lambdaRoute';
 
 // A wrapper function to handle the basic input/output for a lambda
-export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.Request, res: express.Response) {
+export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.Request, res: express.Response, options?: gwOptions) : express.Response {
+    if (options && options.x_api_key && !(options.x_api_key === req.get("x-api-key"))) {
+        let r = res.status(403);
+        r.send("Forbidden");
+        return r;
+    }
+
     const { event, context } = Mapper(verb, req);
 
     lambda.handler(event, context, (err, result) => {
