@@ -16,6 +16,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 // Helper interfaces for the lambda handling...
 
+interface lambdaAuthorizerCallback {
+    (err : Error | string, result : AWSLambda.CustomAuthorizerResult) : Express.Response
+}
+
+interface lambdaAuthorizer {
+    (event : any, context: any, callback : lambdaAuthorizerCallback): boolean;
+}
+
+interface lambdaAuthorizerInterface {
+    handler : lambdaAuthorizer
+}
+
 interface lambdaHandlerCallbackResponse {
     statusCode : number,
     body : string

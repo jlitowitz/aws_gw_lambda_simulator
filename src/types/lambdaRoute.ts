@@ -26,7 +26,11 @@ export class HTTP_VERB {
 }
 
 export interface gwOptions {
-    x_api_key? : string
+    x_api_key? : string,
+    tokenAuthorizer? : {
+        filepath : string,
+        header_key : string
+    }
 }
 
 /**

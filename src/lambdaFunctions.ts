@@ -28,13 +28,47 @@ export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.R
 
     const { event, context } = Mapper(verb, req);
 
-    lambda.handler(event, context, (err, result) => {
-        if (err) {
-            return res.status(502).json({ err });
+    if (options && options.tokenAuthorizer) {
+        const mockAuth = new mockAuthorizationEvent();
+        mockAuth.authorizationToken = req.get(options.tokenAuthorizer.header_key);
+        if (mockAuth.authorizationToken == null) {
+            return res.status(401).send();
         }
 
-        return res.status(result.statusCode).json(result.body);
-    })
+        const authorizer : lambdaAuthorizerInterface = require(options.tokenAuthorizer.filepath);
+        authorizer.handler(mockAuth, context, (err, result) => {
+            if (err) {
+                return res.status(401).send();
+            }
+            // TODO: iterate over all Statemet[x].Effect values
+            // TODO: handle something other than just 'Deny'
+            else if (result.policyDocument.Statement[0].Effect === 'Deny') {
+                return res.status(403).send();
+            }
+            else {
+                // TODO:  eliminate this duplicate code block
+                return lambda.handler(event, context, (err, result) => {
+                    if (err) {
+                        return res.status(502).json({ err });
+                    }
+            
+                    return res.status(result.statusCode).json(result.body);
+                })
+            }
+    
+        })
+    }
+
+    else {
+            // TODO:  eliminate this duplicate code block
+            lambda.handler(event, context, (err, result) => {
+            if (err) {
+                return res.status(502).json({ err });
+            }
+    
+            return res.status(result.statusCode).json(result.body);
+        })            
+    }
 }
 
 export class mockContext implements AWSLambda.Context {
@@ -75,6 +109,16 @@ export class mockEvent implements AWSLambda.APIGatewayEvent {
     stageVariables: { [name: string]: string; };
     requestContext: AWSLambda.APIGatewayEventRequestContext;
     resource: string;
+}
+
+class mockAuthorizationEvent implements AWSLambda.CustomAuthorizerEvent {
+    type: string;
+    methodArn: string;
+    authorizationToken?: string;
+    // headers?: { [name: string]: string };
+    // pathParameters?: { [name: string]: string } | null;
+    // queryStringParameters?: { [name: string]: string } | null;
+    // requestContext?: AWSLambda.APIGatewayEventRequestContext;
 }
 
 // Mimic the subset of the event and context objects created by AWS' Lambda Proxy for the specified request (req)
