@@ -41,11 +41,15 @@ export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.R
                 return res.status(401).send();
             }
             // TODO: iterate over all Statemet[x].Effect values
-            // TODO: handle something other than just 'Deny'
             else if (result.policyDocument.Statement[0].Effect === 'Deny') {
                 return res.status(403).send();
             }
-            else {
+            else if (result.policyDocument.Statement[0].Effect === 'Allow') {
+                context.authorizer = {};
+                context.authorizer.principalId = result.principalId;
+                for (var key in result.context) {
+                    context.authorizer[key] = String(result.context[key]); // the context map is stringified in API Gateway
+                }
                 // TODO:  eliminate this duplicate code block
                 return lambda.handler(event, context, (err, result) => {
                     if (err) {
@@ -54,6 +58,9 @@ export function Wrapper(lambda: lambdaInterface, verb: HTTP_VERB, req: express.R
             
                     return res.status(result.statusCode).json(result.body);
                 })
+            }
+            else {
+                return res.status(500).send();
             }
     
         })
@@ -96,6 +103,7 @@ export class mockContext implements AWSLambda.Context {
     succeed(message: any, object?: any) {
         throw new Error("Mock method not implemented.");
     }
+    authorizer? : any;
 }
 
 export class mockEvent implements AWSLambda.APIGatewayEvent {
