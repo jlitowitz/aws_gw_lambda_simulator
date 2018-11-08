@@ -124,14 +124,72 @@ The `config` method requires an array of `lambdaRoute`s.  Each one of these must
 * `filepath` - the path to the entry point file for your Lambda.  Since this file gets loaded via `require`, you don't need to include the trailing '.js' if you don't want to.  You must specify the full path or use `__dirname` to ensure the correct path is used to locate the lambda entry point.  Otherwise, it will attempt to load the file using the node_modules subfolder as the starting point, and will lead you to unexpected results.
 * `route` - the URL path to expose the endpoint as.
 
-Each `lambdaRoute` may optionally contain an `options` object of type `gwOptions`.  Presently the only option supported is:
+Each `lambdaRoute` may optionally contain an `options` object of type `gwOptions`.  Presently it supports:
 
 * `x_api_key` - an optional string value to be required to simulate the API Key functionality of API Gateway.  When a value is supplied, the exact value must be provided by the caller of the web service in the header `x-api-key`.  If `x-api-key` is either not provided, or is not the same value specified in the `x_api_key` property, the framework will not execute your lambda, and instead return a 403 error, along with the simple payload of "Forbidden".  Keep in mind, the scaffold spins up an unencrypted HTTP site, _not_ one protected by HTTPS, so do not use this key to protect services without using an external HTTPS endpoint to proxy the request - otherwise your `x-api-key` could be read by network sniffers.
+* `tokenAuthorizer` - an optional object that can specify an "authorizer" lambda.  See below for more information.  A valid `tokenAuthorizer` consists of two values:
+  * `filepath` - the path to the entry point file for your Lambda. This field operates exactly the same way as the `filepath` field to the target lambda operates.
+  * `header_key` - the name of the http header that is expected to contain the authorization token.  This will be passed into the authorizer lambda `event` object as `authorizationToken`, just like in the real AWS environment.
+
+### Authorization Lambdas
+Authorization lambdas need to be written and debugged, too!  Hence the limited ability for `aws_gw_lambda_simulator` to run authorization lambdas.  Since this framework is meant as a development tool, some pretty serious limitations exist.  See the section on Limitations, below.
+
+Here's a sample authorization lambda written in TypeScript.
+```javascript
+(exports || module.exports).handler = function(event: AWSLambda.CustomAuthorizerEvent, context: AWSLambda.Context, callback: AWSLambda.Callback) {
+    let authorizationToken = event.authorizationToken;
+    let success : boolean;
+
+    // Do some processing on authorizationToken
+    if (success)
+    {
+        // successfully validated client.
+        return callback(null, generatePolicy(id, 'Allow', "arn:aws:execute-api:{regionId}:{accountId}:{appId}/{stage}/{httpVerb}/[{resource}/[child-resources]]"));
+    }
+    else
+    {
+        // invalid ... deny deny deny!
+        return callback(null, generatePolicy(id, 'Deny', "arn:aws:execute-api:{regionId}:{accountId}:{appId}/{stage}/{httpVerb}/[{resource}/[child-resources]]"));
+    }
+};
+
+// Helper function to generate an IAM policy
+function generatePolicy(principalId : string, effect : string, resource : string) {
+
+    var authResponse : AWSLambda.AuthResponse = {
+        principalId, policyDocument : undefined
+    };
+    
+    if (effect && resource) {
+        var policyDocument : AWSLambda.PolicyDocument = {
+            Version : '2012-10-17',
+            Statement : []
+        };
+        policyDocument.Version = '2012-10-17'; 
+        policyDocument.Statement = [];
+        var statementOne : AWSLambda.Statement = {
+            Action : 'execute-api:Invoke',
+            Effect : effect,
+            Resource : resource
+        }
+        policyDocument.Statement[0] = statementOne;
+        authResponse.policyDocument = policyDocument;
+    }
+    
+    return authResponse;
+}
+
+```
 
 ## Limitations
 * Unlike the actual Lambda environment, containers are not used to execute individual executions.  In contrast, everything here runs on the same thread as is typical for a basic Express application.  This means if you wanted, you could do funky things that allow the different lambdas to interact with each other in ways that aren't possible in the actual environment.  If you wanted to do things like that, just go ahead and use Express directly, since it violates the whole point of developing lambdas!
 * For now, we only simulate the LAMBDA_PROXY integration method.  Long-term we will look into incorporating the [Velocity Template Language](http://velocity.apache.org/engine/devel/vtl-reference.html).  For now though, that's just a pipe dream.
 * The `context` object that is provided to a lambda is a mock object.  It does not include proper values for any of the `context` properties (ex: `context.memoryLimitInMB` or `context.invokedFunctionArn`) or implementations for methods (ex: `context.getRemainingTimeInMillis()`) that would be provided in the AWS environment.  Any attempt to call such methods will throw not-implemented errors.  If your lambda uses the older `context.succeed()`, `context.fail()` or `context.done()` methods to finish executing - they're not going to work, either.  Use `callback()`.
+* The authorizer framework has some significant limitations.
+  * Unlike in AWS, there the framework here does not cache results.  As a result, the authorizer lambda will be run on every execution request.
+  * The framework here does not honor the path supplied in the authorizer lambda's response.  If the first policy's effect is `Allow`, the request will be passed through to the target lambda regardless of whether the path matches.
+  * Regardless of how many policies are returned as part of the authorizer lambda's response, only the first policy will be inspected.  If the first policy is to `Deny` access yet the second one is to `Allow` access, access will be denied.
+
 ___
 Disclaimer:  this project is not in any way associated with AWS or Amazon!
 
