@@ -1,0 +1,52 @@
+service: test
+
+provider:
+  name: aws
+  stage: ${opt:stage}
+  environment:
+
+  runtime: nodejs12.x
+
+  # define the property used for auto-routing of websocket messages
+  websocketsApiRouteSelectionExpression: $request.body.action
+
+functions:
+
+  restAuthorizerFunc:
+    handler: rest-auth.handler
+
+  restHandlerFunc:
+    handler: rest-main.handler
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: /
+          method: post
+          private: true
+          authorizer:
+            name: restAuthorizerFunc
+            identitySource: method.request.header.x-api-key
+            type: request
+          
+  websocketConnectionHandler:
+    handler:  ws-main.onConnect
+    events:
+      - websocket:
+          route: $connect
+          routeResponseSelectionExpression: $default
+          authorizer:
+            name: websocketAuth
+            identitySource:
+              - 'route.request.querystring.code'
+
+  websocketAuth:
+    handler: ws-auth.handler
+
+  websocketMessageHandler:
+    handler:  ws-main.onMessage
+    events:
+      - websocket:
+          route: message
+          routeResponseSelectionExpression: $default
