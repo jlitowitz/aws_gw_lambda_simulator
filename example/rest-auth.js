@@ -1,15 +1,15 @@
 module.exports = {
     handler: async (event, context) => {
         const username = event.queryStringParameters['username'];
-        // if (username) {
+        if (username) {
             return generateAllow(`ab.c`, event.methodArn, {
                 providerName : 'ab',
                 username
             });    
-        // }
-        // else {
-        //     return null;
-        // }
+        }
+        else {
+            return null;
+        }
     }
 }
 
