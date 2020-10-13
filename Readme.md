@@ -81,7 +81,7 @@ functions:
           routeResponseSelectionExpression: $default
 ```
 
-## Parameters to API_GW
+## Parameters to API_GW constructor
 
 `API_GW` accepts two parameters:
 - `serverless`: a path to a `serverless.yml` file.  Required.
@@ -95,6 +95,13 @@ functions:
         - `context` - See the [example](./example/) for a way of using `context` to support the `opt` flag within `serverless.yml`
         - `parent`
 
+## API_GW.serve 
+To start listening, call `api_gw.serve()`.  This method accepts a single parameter - a callback method that expects an object containing two parameters:  `httpPort` and  `wsPort`.  These are the port numbers that the service is listening on for REST and Websockets, respectively.  These can be used as follows:
+```javascript
+api_gw.serve(({httpPort, wsPort}) => { 
+    console.log(`listening http on ${httpPort} and ws on ${wsPort}`); 
+});
+```
 
 ## Authorizer Support
 Basic simulation of authorizers is supported for both REST and Websocket connections.
