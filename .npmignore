@@ -1,5 +1,6 @@
 src/
+example/
 node_modules/
 .vscode/
 npm-shrinkwrap.json
-tsconfig.json
+_config.yml
