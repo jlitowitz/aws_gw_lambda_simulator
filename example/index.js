@@ -1,6 +1,6 @@
-const fakeaws = require('../')
+const API_GW = require('../')
 
-let x = new fakeaws('./serverless.yml',
+const api_gw = new API_GW('./serverless.yml',
   {
     service: { x_api_key: "bob" },
     yaml: {
@@ -18,4 +18,4 @@ let x = new fakeaws('./serverless.yml',
   });
 
 
-x.serve(({httpPort, wsPort}) => { console.log(`listening http on ${httpPort} and ws on ${wsPort}`); });
+api_gw.serve(({httpPort, wsPort}) => { console.log(`listening http on ${httpPort} and ws on ${wsPort}`); });
